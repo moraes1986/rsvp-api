@@ -13,7 +13,7 @@ def list():
     
     
     if "token" in session:
-        req = requests.get(GUEST_API_URL + "/list", headers={"Authorization": f"Bearer {session["token"]}"})
+        req = requests.get(GUEST_API_URL + "/list", headers={"Authorization": f"Bearer {session['token']}"})
 
         if req.status_code == 401:
             flash("You need to login")
