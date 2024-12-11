@@ -1,4 +1,5 @@
 .env
+.DS_Store
 /venv
 /app/web/flask-adminlte-master
 /app/web/static/181702
