@@ -1,0 +1,39 @@
+{% extends "index.html" %}
+{% block content %}
+<div class="cam_cnt">
+    <h3>Confirmação de Presença</h3>
+    
+    <form id="bookingForm" class="booking-form">
+        <div class="tmInput fl-chapps-user139">
+            <input name="Name" placeHolder="Nome Completo" type="text"
+                   data-constraints='@NotEmpty @Required @AlphaSpecial'>
+        </div>
+        <div class="cntr">
+            <div class="col">
+                <div class="tmInput fl-chapps-pen55">
+                    <input name="Guests" placeHolder="#Código de Confirmação / Telefone" type="number"
+                           data-constraints='@NotEmpty @Required @JustNumbers'>
+                </div>
+            </div>
+            <div class="col">
+                <label class="tmDatepicker fl-chapps-weekly10">
+                    <input type="text" name="Date" placeHolder='Date'
+                           data-constraints="@NotEmpty @Required @Date">
+                </label>
+            </div>
+            <div class="col">
+                <select name="Time fl-chapps-weekly10" class="tmSelect manual"
+                        data-constraints="@NotEmpty @Required">
+                    <option>Time</option>
+                    <option>9:00</option>
+                    <option>12:00</option>
+                    <option>15:00</option>
+                    <option>18:00</option>
+                    <option>21:00</option>
+                </select>
+            </div>
+        </div>
+        <a href="#" class="btn" data-type="submit">Confirme Agora!</a>
+    </form>
+</div>
+{% endblock %}

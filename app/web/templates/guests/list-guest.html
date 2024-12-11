@@ -1,0 +1,241 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Convidados {% endblock %} 
+
+<!-- Element injected in the BODY element -->
+{% block body_class %} sidebar-mini {% endblock body_class %} 
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}
+
+  <!-- Google Font: Source Sans Pro -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="/assets/plugins/fontawesome-free/css/all.min.css">
+  <!-- Ionicons -->
+  <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+  <!-- Tempusdominus Bootstrap 4 -->
+  <link rel="stylesheet" href="/assets/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css">
+  <!-- iCheck -->
+  <link rel="stylesheet" href="/assets/plugins/icheck-bootstrap/icheck-bootstrap.min.css">
+  <!-- JQVMap -->
+  <link rel="stylesheet" href="/assets/plugins/jqvmap/jqvmap.min.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="/assets/css/adminlte.min.css">
+  <!-- overlayScrollbars -->
+  <link rel="stylesheet" href="/assets/plugins/overlayScrollbars/css/OverlayScrollbars.min.css">
+  <!-- Daterange picker -->
+  <link rel="stylesheet" href="/assets/plugins/daterangepicker/daterangepicker.css">
+  <!-- summernote -->
+  <link rel="stylesheet" href="/assets/plugins/summernote/summernote-bs4.min.css">
+
+{% endblock stylesheets %}
+{% block content %}
+  
+  <div class="content-wrapper">
+
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1 class="m-0 text-dark">Lista de Convidados</h1>
+          </div><!-- /.col -->
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item"><a href="#">Home</a></li>
+              <li class="breadcrumb-item active">Lista Convidados</li>
+            </ol>
+          </div><!-- /.col -->
+        </div><!-- /.row -->
+      </div><!-- /.container-fluid -->
+    </div>
+    <!-- /.content-header -->
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">Lista de Convidados</h3>
+        </div>
+        <div>
+          <form action="/upload_guest" method="POST" enctype="multipart/form-data">
+            <div class="card-body col-md-4">
+              <div class="form-group">
+                <label for="exampleInputFile">Importar Convidados</label>
+                <div class="input-group">
+                  <div class="custom-file">
+                    <input type="file" class="custom-file-input" id="exampleInputFile" name="file">
+                    <label class="custom-file-label" for="exampleInputFile">Selecione arquivo</label>
+                  </div>
+                  <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                  </div>
+                  
+                </div>
+              </div>
+            </div>
+            <!-- /.card-body -->
+          </form>
+          <div class="col-md-9">
+            {% with messages = get_flashed_messages() %}
+              {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-danger" role="alert">
+                      {{ message }}
+                    </div>
+                {% endfor %}
+              {% endif %}
+            {% endwith %}
+          </div>
+        </div>
+        <!-- /.card-header -->
+        <div class="card-body">
+          <table id="example1" class="table table-bordered table-striped">
+            <thead>
+            <tr>
+              <th hidden>Id</th>
+              <th>Código</th>
+              <th>Nome</th>
+              <th>Telefone</th>
+              <th>Principal</th>
+              <th>Email</th>
+              <th>Confirmado</th>
+              <th>Criança</th>
+              <th>Idade</th>
+              <th>Confirmação</th>
+              <th>Associados</th>
+              <th>Ações</th>
+            </tr>
+            </thead>
+            <tbody>
+              {% for guest in guests %}
+              <tr>
+                <td hidden>{{ guest['_id'] }}</td>
+                <td>{{ guest['code'] }}</td>
+                <td>{{ guest['fullname'] }}</td>
+                <td>{{ guest['phone'] }} </td>
+                <td>{% if guest['main_guest'] == true %} 
+                      <input type="checkbox" checked disabled>
+                    {% else %}   
+                      <input type="checkbox" disabled>
+                    {% endif %}
+                </td>
+                <td>{{ guest['email'] }} </td>
+                <td>{%  if guest['confirmed'] == True %}
+                        <input type="checkbox" checked disabled>
+                     {% else %}   
+                        <input type="checkbox" disabled>
+                    {% endif %}
+                </td>
+                <td>
+                  {%  if guest['is_child'] == True %}
+                      <input type="checkbox" checked disabled>
+                    {% else %}   
+                      <input type="checkbox" disabled>
+                  {% endif %}
+                </td>
+                <td>{{ guest['child_age'] }}</td>
+                <td>
+                  {{  guest['confirmed_at'] }} </td>
+                <td>
+
+                  {% for associate in guest['parentList'] %}
+                    <b>Nome: </b>{{ associate['fullname'] }} <br>
+                    {% if associate['child_age'] %}
+                      <b>Idade: </b>{{ associate['child_age'] }} <br>
+                    {% endif %}
+                    {% if associate['is_child'] %}
+                      <b>Criança: </b><input type="checkbox" checked disabled><br>
+                      {% else %}
+                      <b>Criança: </b><input type="checkbox" disabled><br>
+                    {% endif %}
+                    {% if associate['confirmed'] %}
+                      <b>Confirmado: </b><input type="checkbox" checked disabled><br>
+                      {% else %}
+                      <b>Confirmado: </b><input type="checkbox" disabled><br>
+                    {% endif %}
+                    <b>Data Conf.: </b>{{ associate['confirmed_at'] }}<br><br>
+       
+                  {% endfor %}
+
+                </td>
+                <td>
+                  <a href="/edit_guest/{{ guest['_id']['$oid'] }}" class="btn btn-primary">Editar</a>
+                  <a href="/delete_guest/{{ guest['_id']['$oid'] }}" class="btn btn-danger">Excluir</a>
+              </tr>
+              </div>
+            {% endfor %}
+
+            </tbody>
+            <tfoot>
+              <tr>
+                <th hidden>Id</th>
+                <th>Código</th>
+                <th>Nome</th>
+                <th>Telefone</th>
+                <th>Principal</th>
+                <th>Email</th>
+                <th>Confirmado</th>
+                <th>Criança</th>
+                <th>Idade</th>
+                <th>Confirmação</th>
+                <th>Associados</th>
+                <th>Ações</th>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+        <!-- /.card-body -->
+      </div>
+    </section>
+
+</div>
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}
+
+  <!-- jQuery -->
+  <script src="/assets/plugins/jquery/jquery.min.js"></script>
+  <!-- Bootstrap 4 -->
+  <script src="/assets/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <!-- DataTables -->
+  <script src="/assets/plugins/datatables/jquery.dataTables.min.js"></script>
+  <script src="/assets/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+  <script src="/assets/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+  <script src="/assets/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+  <!-- AdminLTE App -->
+  <script src="/assets/js/adminlte.min.js"></script>
+  <!-- bs-custom-file-input -->
+  <script src="/assets/plugins/bs-custom-file-input/bs-custom-file-input.min.js"></script>
+  <!-- AdminLTE for demo purposes -->
+  <script src="/assets/js/demo.js"></script>
+  <!-- page script -->
+  <script>
+    $(function () {
+      $("#example1").DataTable({
+        "responsive": true,
+        "autoWidth": false,
+      });
+      $('#example2').DataTable({
+        "paging": true,
+        "lengthChange": false,
+        "searching": false,
+        "ordering": true,
+        "info": true,
+        "autoWidth": false,
+        "responsive": true,
+      });
+    });
+
+  
+    $(function () {
+    bsCustomFileInput.init();
+    });
+
+  </script>
+
+{% endblock javascripts %}
+

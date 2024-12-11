@@ -1,0 +1,376 @@
+﻿<!DOCTYPE HTML>
+<html lang="en">
+<head>
+    <title>Home</title>
+    <meta charset="utf-8">
+    <meta name="format-detection" content="telephone=no"/>
+    <link rel="icon" href="images/favicon.ico'" type="image/x-icon">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/grid.css">
+    <link rel="stylesheet" href="css/style.css" type="text/css" media="all">
+    <link rel="stylesheet" href="css/camera.css">
+    <link rel="stylesheet" href="css/booking.css">
+    <link rel="stylesheet" href="css/fl-chapps.css">
+    <link rel="stylesheet" href="css/jquery.fancybox.css">
+    <link rel="stylesheet" href="css/google-map.css">
+
+    
+    <script src="js/jquery.js"></script>
+    <script src="js/jquery-migrate-1.2.1.js"></script>
+    <script type="text/javascript" src="js/jquery.countdown.min.js"></script>
+    <script type="text/javascript" src="js/scriptGuest/guestconfirm.js"></script>
+
+    <!--[if lt IE 9]>
+    <html class="lt-ie9">
+    <div style=' clear: both; text-align:center; position: relative;'>
+        <a href="http://windows.microsoft.com/en-US/internet-explorer/..">
+            <img src="images/ie8-panel/warning_bar_0000_us.jpg" border="0" height="42" width="820"
+                 alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today."/>
+        </a>
+    </div>
+    <script src="js/html5shiv.js"></script>
+    <![endif]-->
+
+    <script src="js/device.min.js"></script>
+</head>
+<body>
+<div class="page">
+    <!--========================================================
+                              HEADER
+    =========================================================-->
+    <header>
+        <div class="header_cnt">
+            <div class="container center">
+                <div class="brand">
+                    <h1 class="brand_name">
+                        <a href="./" style="text-decoration: none; text-decoration-skip:initial; animation: none;" >Alice Martinez Moraes</a>
+                    </h1>
+
+                    <p class="brand_slogan">
+                        Meu Primeiro Aninho
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="camera_container">
+            
+            <div class="square"></div>
+            <div class="square2"></div>
+            <div class="cam_cnt1">
+                <div class="cam_cnt">
+                    <h3>Confirmação de Presença</h3>
+                    
+                    <form id="bookingForm" name="guestconfirm" class="booking-form" method="get">
+                        <div class="tmInput fl-chapps-user139">
+                            <input autofocus name="id" placeHolder="Codigo ou telefone" type="number"
+                                   data-constraints='@NotEmpty @Required'>
+                        </div>
+                        <br>
+                        <a href="#" class="btn" name="confirm" id="confirm" data-type="submit">Confirme Agora!</a>
+                    </form>
+
+                    <br><br>
+                    
+                    <div id="result">
+                        <div id="error" class="alert alert-warning" role="alert" hidden></div>
+                        <div id="success" class="alert alert-success" role="alert" hidden></div>
+                        <div id="formGuest" class="form" hidden >
+                            <div class="form-group" hidden>
+                                <input type="text" class="form-control" id="_id" name="_id">
+                                <input type="int" class="form-control" id="code" name="code">
+                            </div>
+                            <div class="form-group">
+                                <label for="fullname">Nome</label>
+                                
+                                <input type="text" class="form-control" id="fullname" name="fullname" required disabled >
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Email</label>
+                                <input type="email" class="form-control" id="email" name="email" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="phone">Telefone</label>
+                                <input type="tel" class="form-control" id="phone" name="phone" onkeyup="handlePhone(event)" maxlength="15">
+                            </div>
+                            <div class="form-group">
+                                <label for="confirmed" class="col-md-3">Confirmar?</label>
+                                <div class="col-md-1">
+                                    <input type="checkbox" class="form-control" id="confirmed" name="confirmed">
+                                </div>
+                            </div>
+                            <div class="form-group" hidden>
+                                <label for="is_child" class="col-md-3">Criança?</label>
+                                <div class="col-md-1">
+                                    <input type="checkbox" class="form-control col-md-12" id="is_child" name="is_child">
+                                </div>
+                                <div class="col-md-4">Sim</div>
+                                
+                            </div>
+                            <p></p>
+                            <br><br><br>
+                            <div class="form-group">
+                                <label for="parentList">Convidados Associados:</label>
+                                <ul class="list-group" id="parentList">
+                                </ul>
+                            </div>
+                            <button type="submit" class="btn btn-primary" id="send_confirm" onclick="confirmGuest()">Validar Confirmação</button>
+                        </div>
+                        
+
+                    </div>
+                </div>
+                {% block content %}
+                {% endblock %}
+
+                <img src="images/bg2.png" alt=""/>
+            </div>
+            <div id="camera" class="camera_wrap">
+                <div data-src="images/page-1_slide1.jpg">
+                    <div class="camera_caption fadeIn">
+                    </div>
+                </div>
+                <div data-src="images/page-1_slide2.jpg">
+                    <div class="camera_caption fadeIn">
+
+                    </div>
+                </div>
+                <div data-src="images/page-1_slide3.jpg">
+                    <div class="camera_caption fadeIn">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </header>
+
+    <!--========================================================
+                              CONTENT
+    =========================================================-->
+    <main>
+        <section class="well center">
+            <div class="container">
+                <h2>Um Pouquinho Sobre minha família</h2>
+
+                <h6>Meu nome é Alice Martinez Moraes, nasci no dia 16 de Janeiro de 2024 às 04:55 da manhã<br/>
+                    Sou a princesinha do papai Thiago Moraes e da mamãe Mayra Martinez. Eu sou então a tão esperada netinha
+                    do vovô Caco e vovó Rita e também do vovô Marquinho e vovó Belinha. E não poderia jamais esquecer dos meus titio(a)s queridos
+                    tia Tatá, tio Angelus e meu pequenino titio Murilo.
+                    Estão esta é minha linda família.</h6>
+
+                <br><br><br></p>
+                <h2 class="grid_3">Faltam</h2>
+                <br>
+                <div class="col-md-8" >
+                    <div id="counter"></div>
+                    <div class="counter_desc">
+                      <div class="days">Dias</div>
+                      <div class="hours">Horas</div>
+                      <div class="minutes">Minutos</div>
+                      <div class="seconds">Segundos</div>
+                    </div>
+                    <br><br>
+                    <h2>Para meu primeiro aninho</h2>
+                </div>
+            </br><p></p>
+            <div class="grid_10">
+                <br><br><br>
+                <img src="images/page-1_img01.png" alt=""/>
+            </div>
+                
+            </div>
+        </section>
+        <section class="well1 bg-secondary2">
+            <div class="container">
+                <h2 class="center">Um Poquinho sobre mim. As três coisas que eu mais gosto de fazer:</h2>
+                <ul class="index-list row">
+                    <li class="grid_4 wow fadeInUp">
+                        <h5>Comer</h5>
+
+                        <p>Adoro a comidinha que a mamãe faz e sempre como tudo, sem deixar nada no pratinho.</p>
+                    </li>
+                    <li class="grid_3 wow fadeInUp" data-wow-delay="0.2s">
+                        <h5>Dormir</h5>
+
+                        <p>Adoro domir, tenho que ter meu tão esperado soninho noturno de 12 horinhas e também adoro fazer meu quilinho após almoço.</p>
+                    </li>
+                    <li class="grid_4 fadeInUp" data-wow-delay="0.4s">
+                        <h5>Fazer amizades</h5>
+
+                        <p>Em todos os lugares que vou, sempre tento manter meu bom humor em dia e dar muitas risadinhas para pessoas, já que ainda não consigo falar.
+                            E adoro mostra minha boca cheiaa de dentes.
+                        </p>
+                    </li>
+                </ul>
+            </div>
+        </section>
+        <section class="well2 bg-img">
+            <div class="container">
+                <div class="row">
+                    <div class="grid_4 preffix_8">
+                        <h3 class="media_off_left"><span>Nascimento</span>O dia tão esperado pelo papai e pela mamãe</h3>
+
+                        <p class="media_off_left"><strong>Ainda não sei falar, mas vi desde o primeiro dia nos olhos de meu papai e de minha mamãe
+                            o quão importante eu sou para eles. Eles me amam muito e eu também amo muito eles.
+                        </strong></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="center well2__ins">
+            <div class="container">
+                <h2 class="center">Minhas Fotinhas</h2>
+            </div>
+            <ul class="inline-list">
+                <li><a class="thumb" href="images/page-1_img02_original.jpg" data-fancybox-group="1">
+                    <img src="images/page-1_img02.jpg" alt=""/>
+
+                    <div class="thumb_overlay">
+                        <div class="thumb_overlay_cnt">
+                            <h4>Nascimento</h4>
+
+                            <p>Este foi o dia em que nasci</p>
+                        </div>
+                    </div>
+                </a></li>
+                <li><a class="thumb" href="images/page-1_img03_original.jpg" data-fancybox-group="1">
+                    <img src="images/page-1_img03.jpg" alt=""/>
+
+                    <div class="thumb_overlay">
+                        <div class="thumb_overlay_cnt">
+                            <h4>Família</h4>
+
+                            <p>Este foi o dia que conheci toda família</p>
+                        </div>
+                    </div>
+                </a></li>
+                <li><a class="thumb" href="images/page-1_img04_original.jpg" data-fancybox-group="1">
+                    <img src="images/page-1_img04.jpg" alt=""/>
+
+                    <div class="thumb_overlay">
+                        <div class="thumb_overlay_cnt">
+                            <h4>Primeiro Passeio</h4>
+
+                            <p>Este foi o dia do meu primeiro passeio em Monte Verde</p>
+                        </div>
+                    </div>
+                </a></li>
+                <li><a class="thumb" href="images/page-1_img05_original.jpg" data-fancybox-group="1">
+                    <img src="images/page-1_img05.jpg" alt=""/>
+
+                    <div class="thumb_overlay">
+                        <div class="thumb_overlay_cnt">
+                            <h4>Comidinha hunn..</h4>
+
+                            <p>Este foi o dia do meu primeiro papa. Adoro</p>
+                        </div>
+                    </div>
+                </a></li>
+                <li><a class="thumb" href="images/page-1_img06_original.jpg" data-fancybox-group="1">
+                    <img src="images/page-1_img06.jpg" alt=""/>
+
+                    <div class="thumb_overlay">
+                        <div class="thumb_overlay_cnt">
+                            <h4>Batizado</h4>
+
+                            <p>Este foi o dia do meu Batizado</p>
+                        </div>
+                    </div>
+                </a></li>
+                <li><a class="thumb" href="images/page-1_img07_original.jpg" data-fancybox-group="1">
+                    <img src="images/page-1_img07.jpg" alt=""/>
+
+                    <div class="thumb_overlay">
+                        <div class="thumb_overlay_cnt">
+                            <h4>Praia</h4>
+
+                            <p>E não poderia faltar a minha primeira viagem para praia com papai e mamãe.</p>
+                        </div>
+                    </div>
+                </a></li>
+            </ul>
+        </section>
+        
+    </main>
+
+    <!--========================================================
+                              FOOTER
+    =========================================================-->
+    <footer>
+        <div class="footer_cnt">
+            <div class="container">
+                <h2 class="center">Padrinhos</h2>
+                <div class="row">
+                    <div class="grid_5 shadow bg-primary wow fadeInLeft">
+                        <blockquote class="box">
+                            <div class="box_aside">
+                                <img src="images/page-1_img09.jpg" alt=""/>
+                            </div>
+                            <div class="box_cnt__no-flow">
+                                <cite>Ana Luiza</cite>
+                                <q><span>“</span>Beciegast nveriti vitesaert asety kertya aset aplicaboserde nerafaes
+                                    lorem ipsumditaut. Monsequ untire ertyasa voluptate.</q>
+                            </div>
+                        </blockquote>
+                    </div>
+                    <div class="grid_5 shadow bg-primary wow fadeInRight">
+                        <blockquote class="box">
+                            <div class="box_aside">
+                                <img src="images/page-1_img10.jpg" alt=""/>
+                            </div>
+                            <div class="box_cnt__no-flow">
+                                <cite>Leandro</cite>
+                                <q><span>“</span>Monsequ untire smagni dolores eonqui ratione fertyasa voluptate.
+                                    msequi nesciunt, neque porrsquam sedolore nuyfasas. </q>
+                            </div>
+                        </blockquote>
+                    </div>
+                </div>
+            <br><br><br>
+                <h2 class="center">Padrinhos de Consagração</h2>
+
+                <div class="row">
+                    <div class="grid_5 shadow bg-primary wow fadeInLeft">
+                        <blockquote class="box">
+                            <div class="box_aside">
+                                <img src="images/page-1_img09.jpg" alt=""/>
+                            </div>
+                            <div class="box_cnt__no-flow">
+                                <cite>Thaís (tia Tatá)</cite>
+                                <q><span>“</span>Beciegast nveriti vitesaert asety kertya aset aplicaboserde nerafaes
+                                    lorem ipsumditaut. Monsequ untire ertyasa voluptate.</q>
+                            </div>
+                        </blockquote>
+                    </div>
+                    <div class="grid_5 shadow bg-primary wow fadeInRight">
+                        <blockquote class="box">
+                            <div class="box_aside">
+                                <img src="images/page-1_img10.jpg" alt=""/>
+                            </div>
+                            <div class="box_cnt__no-flow">
+                                <cite>Tio Muri</cite>
+                                <q><span>“</span>Monsequ untire smagni dolores eonqui ratione fertyasa voluptate.
+                                    msequi nesciunt, neque porrsquam sedolore nuyfasas. </q>
+                            </div>
+                        </blockquote>
+                    </div>
+                </div>
+               
+                <div class="copyright center">
+                    © <span id="copyright-year"></span> |
+                    All Rights Reserved
+                   <a href='https://monsterone.com/graphics/logo-templates/'>Logo Templates item created by denayunetm - https://monsterone.com</a>
+                </div>
+            </div>
+        </div>
+        
+    </footer>
+</div>
+
+<script src="js/script.js"></script>
+
+<!--coded by Morpeh-->
+
+</body>
+</html>

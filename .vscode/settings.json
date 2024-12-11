@@ -1,0 +1,4 @@
+{
+    "remoteHub.gitProtocol": "ssh",
+    "gitlens.advanced.blame.customArguments": []
+}
