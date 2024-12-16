@@ -2,18 +2,19 @@ from flask import Blueprint, session, render_template, flash, redirect, url_for,
 import requests
 from datetime import datetime
 import csv
+import http
 
-from app.settings import GUEST_API_URL
+from app.settings import GUEST_API_URL, FLASK_RUN_PORT, LOCALHOST_URL
 
 guest = Blueprint('guest_view', __name__)
-
+URL = LOCALHOST_URL + ":" + FLASK_RUN_PORT + "/" + GUEST_API_URL
 
 @guest.route('/list_guests')
 def list():
     
     
     if "token" in session:
-        req = requests.get(GUEST_API_URL + "/list", headers={"Authorization": f"Bearer {session['token']}"})
+        req = requests.get(URL + "/list", headers={"Authorization": f"Bearer {session['token']}"})
 
         if req.status_code == 401:
             flash("You need to login")
@@ -93,7 +94,7 @@ def upload():
                 "parentList": parent_list
             }
 
-            req = requests.post(GUEST_API_URL + "/add", json=guest, headers={"Authorization": f"Bearer {session['token']}"})
+            req = requests.post(URL + "/add", json=guest, headers={"Authorization": f"Bearer {session['token']}"})
             if req.status_code != 200:
                 error_message = "An error occurred", req.json()
                 print(req.json())
@@ -106,7 +107,7 @@ def upload():
 
 @guest.route('/delete_guest/<id>')
 def delete(id):
-    req = requests.delete(GUEST_API_URL + f"/id?_id={id}", headers = {"Authorization": f"Bearer {session['token']}"})
+    req = requests.delete(URL + f"/id?_id={id}", headers = {"Authorization": f"Bearer {session['token']}"})
     if req.status_code == 200:
         message = req.json()
         flash("Convidado deletado com sucesso! Nome: " + message.get("fullname"))
@@ -117,7 +118,7 @@ def delete(id):
 
 @guest.route('/edit_guest/<id>')
 def edit(id):
-    req = requests.get(GUEST_API_URL + f"/id?id={id}")
+    req = requests.get(URL + f"/id?id={id}")
     if req.status_code == 200:
         guest = req.json()
         return render_template("guests/edit-guest.html", guest=guest)
@@ -126,3 +127,92 @@ def edit(id):
         return redirect(url_for("guest_view.list"))
 
 
+@guest.route('/insert', methods=["GET", "POST"])
+def insertGuest():
+    if request.method == 'GET':
+        return render_template('guests/insert.html')
+    else:
+        guestList = []
+        for i in request.form.getlist("parent"):
+            parent = {
+                "fullname": request.form[i].get("fullname"),
+                "confirmed": request.form[i].get("confirmed"),
+                "is_child": request.form[i].get("is_child"),
+                "child_age": request.form[i].get("child_age")
+            }
+            guestList.append(parent)
+
+
+        fullname = request.form.get("fullname")
+        phone = request.form.get("phone")
+        email = request.form.get("email")
+        main_guest = request.form.get("main_guest")
+        confirmed = request.form.get("confirmed")
+        is_child = request.form.get("is_child")
+        
+        if not fullname or len(fullname) > 50:
+            flash("Nome obrigatório e deve ter no máximo 50 caracteres")
+        else:
+            guest = {
+                "fullname": fullname,
+                "phone": phone,
+                "email": email,
+                "main_guest": main_guest,
+                "confirmed": confirmed,
+                "is_child": is_child,
+                "parentList": guestList
+            }
+            response = requests.post('http://127.0.0.1:5000/api/v1/guest/add', json=guest)
+            print(response.json())
+            flash("Convidado inserido com sucesso!")
+        return redirect(url_for('guests.listGuests'))
+
+@guest.route('/edit')
+def editGuest():
+    if request.method == 'GET':
+        id_guest = request.values.get('id')
+
+        if not id_guest:
+            flash("ID do convidado não informado")
+            return redirect(url_for('guests.listGuests'))
+        else:
+            guest = requests.get(f'http://127.0.0.1:5000/api/v1/guest/id?id={id_guest}')
+            print(guest.json())
+            return render_template('guests/edit.html', guest=guest)
+    else:
+        id_guest = request.values.get('id')
+        fullname = request.form.get("fullname")
+        phone = request.form.get("phone")
+        email = request.form.get("email")
+        main_guest = request.form.get("main_guest")
+        confirmed = request.form.get("confirmed")
+        is_child = request.form.get("is_child")
+        parentList = request.form.get("parentList")
+
+        if not fullname or len(fullname) > 50:
+            flash("Nome obrigatório e deve ter no máximo 50 caracteres")
+        else:
+            guest = {
+                "fullname": fullname,
+                "phone": phone,
+                "email": email,
+                "main_guest": main_guest,
+                "confirmed": confirmed,
+                "is_child": is_child,
+                "parentList": parentList
+            }
+            response = requests.put(f'http://127.0.0.1:5000/api/v1/guest/confim', json=guest)
+            print(response.json())
+            flash("Convidado alterado com sucesso!")
+        return redirect(url_for('guests.listGuests'))
+    
+@guest.route('/delete')
+def deleteGuest():
+    id_guest = request.values.get('id')
+    if not id_guest:
+        flash("ID do convidado não informado")
+    else:
+        response = requests.delete(f'http://127.0.0.1:5000/api/v1/guest/id?id={id_guest}')
+        print(response.json())
+        flash("Convidado deletado com sucesso!")
+    return redirect(url_for('guests.listGuests'))

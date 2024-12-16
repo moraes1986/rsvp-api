@@ -15,3 +15,5 @@ JWT_REFRESH_TOKEN_EXPIRES = timedelta(days=int(os.getenv("JWT_REFRESH_TOKEN_EXPI
 GUEST_API_URL = os.getenv("GUEST_API_URL")
 USER_API_URL = os.getenv("USER_API_URL")
 
+LOCALHOST_URL = os.getenv("LOCALHOST_URL")
+

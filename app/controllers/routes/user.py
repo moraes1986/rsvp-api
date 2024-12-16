@@ -152,7 +152,7 @@ class Login(Resource):
     def post(self):
         status_code = 200
         usercollection = mongo.db.users
-        print(user_ns.payload)
+
         user_result = usercollection.find_one({"username": user_ns.payload.get("username")})
         if user_result is None:
             status_code = 404
@@ -180,37 +180,4 @@ class Refresh(Resource):
         identity = get_jwt_identity()
         return create_tokens(identity, None), 200
 
- #       if "username" in session: 
- #           return redirect(url_for("routes.home"))
-#
- #       elif request.method == "POST":
- #           username = request.form.get("username")
- #           password = request.form.get("password")
- #           print(username, password)
- #           user_found = mongo.db.users.find_one({"username": username})
-#
- #           print(user_found)
- #           if user_found:
- #               validUser = user_found["username"]
- #               validPassword = user_found["password"]
- #               print(validUser, validPassword)
- #               if check_password_hash(validPassword, password):
-#
- #                   extras = {
- #                       'token': create_access_token(identity=username),
- #                       'refresh': create_refresh_token(identity=username)
- #                   }
- #                   
- #                   session["username"] = validUser
- #                   #return redirect(url_for("user.home"))
- #                   return resp_ok('Auth', MSG_TOKEN_CREATED, None, **extras)
- #               else:
- #                   flash("Invalid password")
- #                   return render_template("users/login.html")
- #           else:
- #               flash("Invalid username")
- #               return render_template("users/login.html")
- #       return render_template("users/login.html")
-#
-
-
+ 
