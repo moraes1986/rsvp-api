@@ -52,12 +52,12 @@ class GetById(Resource):
     @guests_ns.response( int(HTTPStatus.OK), 'Success' )
     @guests_ns.param('_id', 'The id of the guest', type=str, required=True)
     def delete(self):
-
+        
         status_code = 200
         ret.add_argument('_id', type=str, required=True, help='The id of the guest')
         args = ret.parse_args()
         id = args['_id']
-        
+        print(id)
         guestcollection = mongo.db.guests
         guest = guestcollection.find_one({"_id": ObjectId(id)})
        

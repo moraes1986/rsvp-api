@@ -206,13 +206,3 @@ def editGuest():
             flash("Convidado alterado com sucesso!")
         return redirect(url_for('guests.listGuests'))
     
-@guest.route('/delete')
-def deleteGuest():
-    id_guest = request.values.get('id')
-    if not id_guest:
-        flash("ID do convidado não informado")
-    else:
-        response = requests.delete(f'http://127.0.0.1:5000/api/v1/guest/id?id={id_guest}')
-        print(response.json())
-        flash("Convidado deletado com sucesso!")
-    return redirect(url_for('guests.listGuests'))
