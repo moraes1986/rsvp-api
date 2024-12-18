@@ -193,6 +193,7 @@ async function confirmGuest() {
 
 /* Evento de clique no botão de confirmação */
 document.addEventListener('DOMContentLoaded', function() {
+
   var confirmButton = document.getElementById('confirm');
  
     if (confirmButton) {
