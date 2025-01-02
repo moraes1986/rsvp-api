@@ -1,13 +1,19 @@
-from flask import Blueprint, session, render_template, flash, redirect, url_for, request
-import requests
-from datetime import datetime
 import csv
-import http
+import requests
+
+from flask import Blueprint, session, render_template, flash, redirect, url_for, request
+from flask_wtf import FlaskForm
+from wtforms import StringField, BooleanField, DateTimeLocalField, FieldList, FormField
+from datetime import datetime
 
 from app.settings import GUEST_API_URL, FLASK_RUN_PORT, LOCALHOST_URL
 
 guest = Blueprint('guest_view', __name__)
 URL = LOCALHOST_URL + ":" + FLASK_RUN_PORT + "/" + GUEST_API_URL
+
+class GuestForm(FlaskForm):
+    datetime = DateTimeLocalField('Pick a Date', format='%d/%m/%YT%H:%M:%S')
+
 
 @guest.route('/list_guests')
 def list():
@@ -118,91 +124,77 @@ def delete(id):
 
 @guest.route('/edit_guest/<id>')
 def edit(id):
+    form = GuestForm()
+    print(id)
     req = requests.get(URL + f"/id?id={id}")
+    print(req.json())
     if req.status_code == 200:
         guest = req.json()
-        return render_template("guests/edit-guest.html", guest=guest)
+        if guest.get("confirmed") and guest.get("confirmed_at").find("Z") > 0:
+            guest["confirmed_at"] = datetime.strptime(guest["confirmed_at"].replace('Z',''), "%Y-%m-%dT%H:%M:%S.%f").strftime("%Y-%m-%d %H:%M:%S")
+        guest["id"] = guest["_id"]["$oid"]
+        print(guest.get("id"), guest.get("_id"))
+        for parent in guest["parentList"]:
+            if parent["confirmed"] and parent["confirmed_at"].find("Z") > 0:
+                parent["confirmed_at"] = datetime.strptime(parent["confirmed_at"].replace('Z',''), "%Y-%m-%dT%H:%M:%S.%f").strftime("%Y-%m-%d %H:%M:%S")
+            
+        return render_template("guests/edit-guest.html", guest=guest, form=form)
     else:
         flash("An error occurred")
         return redirect(url_for("guest_view.list"))
 
 
-@guest.route('/insert', methods=["GET", "POST"])
+@guest.route('/add_guest')
 def insertGuest():
-    if request.method == 'GET':
-        return render_template('guests/insert.html')
-    else:
-        guestList = []
-        for i in request.form.getlist("parent"):
-            parent = {
-                "fullname": request.form[i].get("fullname"),
-                "confirmed": request.form[i].get("confirmed"),
-                "is_child": request.form[i].get("is_child"),
-                "child_age": request.form[i].get("child_age")
-            }
-            guestList.append(parent)
+    parent = { 'fullname': '', 'confirmed': False, 'confirmed_at': '', 'is_child': False, 'child_age': 0 }
+    return render_template("guests/add-guest.html", parent=parent)
 
-
-        fullname = request.form.get("fullname")
-        phone = request.form.get("phone")
-        email = request.form.get("email")
-        main_guest = request.form.get("main_guest")
-        confirmed = request.form.get("confirmed")
-        is_child = request.form.get("is_child")
-        
-        if not fullname or len(fullname) > 50:
-            flash("Nome obrigatório e deve ter no máximo 50 caracteres")
-        else:
-            guest = {
-                "fullname": fullname,
-                "phone": phone,
-                "email": email,
-                "main_guest": main_guest,
-                "confirmed": confirmed,
-                "is_child": is_child,
-                "parentList": guestList
-            }
-            response = requests.post('http://127.0.0.1:5000/api/v1/guest/add', json=guest)
-            print(response.json())
-            flash("Convidado inserido com sucesso!")
-        return redirect(url_for('guests.listGuests'))
-
-@guest.route('/edit')
+@guest.route('/update_guest', methods=["POST"])
 def editGuest():
-    if request.method == 'GET':
-        id_guest = request.values.get('id')
+    if request.method == 'POST':
+        #print(request.json())
+        req = request.form.items("parentList")
+        print(req)
+        for i in req:
+            print(i)
 
-        if not id_guest:
-            flash("ID do convidado não informado")
-            return redirect(url_for('guests.listGuests'))
-        else:
-            guest = requests.get(f'http://127.0.0.1:5000/api/v1/guest/id?id={id_guest}')
-            print(guest.json())
-            return render_template('guests/edit.html', guest=guest)
-    else:
         id_guest = request.values.get('id')
         fullname = request.form.get("fullname")
         phone = request.form.get("phone")
         email = request.form.get("email")
         main_guest = request.form.get("main_guest")
         confirmed = request.form.get("confirmed")
+        confirmed_at = request.form.get("confirmed_at")
         is_child = request.form.get("is_child")
-        parentList = request.form.get("parentList")
-
+        parentList = request.values.get("parentList")
+        
+        print(request.values, request.values.getlist("parentList"))
         if not fullname or len(fullname) > 50:
             flash("Nome obrigatório e deve ter no máximo 50 caracteres")
         else:
+            print(parentList, id_guest, fullname)
+            list_parent = []
+            for parent in parentList:
+                parent["confirmed_at"] = datetime.strptime(parent["confirmed_at"], "%Y-%m-%d %H:%M:%S")
+                parent["child_age"] = int(parent["child_age"])
+                parent["confirmed"] = bool(parent["confirmed"])
+                parent["is_child"] = bool(parent["is_child"])
+                parent["fullname"] = str(parent["fullname"])
+                list_parent.append(parent)
+            
             guest = {
                 "fullname": fullname,
                 "phone": phone,
                 "email": email,
                 "main_guest": main_guest,
                 "confirmed": confirmed,
+                "confirmed_at": confirmed_at,
                 "is_child": is_child,
-                "parentList": parentList
+                "parentList": list_parent
             }
-            response = requests.put(f'http://127.0.0.1:5000/api/v1/guest/confim', json=guest)
+
+            response = requests.put(URL + f'/confim', json=guest)
             print(response.json())
             flash("Convidado alterado com sucesso!")
-        return redirect(url_for('guests.listGuests'))
+        return redirect(url_for("guest_view.list"))
     

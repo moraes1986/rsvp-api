@@ -2,7 +2,7 @@ import json
 import jsonpickle
 from datetime import datetime
 from http import HTTPStatus
-from bson import ObjectId, json_util
+from bson import ObjectId
 
 from werkzeug.security import check_password_hash, generate_password_hash
 from flask_restx import Namespace, Resource, reqparse, fields, Model

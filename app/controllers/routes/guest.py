@@ -26,20 +26,27 @@ guests_ns.inherit('Parent', ParentsEntity.get_parents_model())
 class GetById(Resource):
     
     @guests_ns.response( int(HTTPStatus.OK), 'Success' )
-    @guests_ns.param('id', 'The code of the guest', type=int, required=True)
+    @guests_ns.param('id', 'The code of the guest', required=True)
     def get(self):
 
         status_code = 200
-        ret.add_argument('id', type=int, required=True, help='The id of the guest')
+        ret.add_argument('id', required=True, help='The id of the guest')
         args = ret.parse_args()
         id = args['id']
+        guest = None
         
         guestcollection = mongo.db.guests
-        guest = guestcollection.find_one({"code": id})
 
-        if not guest:
-            guest = guestcollection.find_one({"phone": id})  
-        
+        try:
+            id = int(id)
+            guest = guestcollection.find_one({'code': id})
+
+            if not guest:
+                guest = guestcollection.find_one({'phone': id})  
+
+        except ValueError:
+            guest = guestcollection.find_one({"_id": ObjectId(id)})
+
         if not guest:
             LOGGER.info("Guest not found")
             status_code = 404

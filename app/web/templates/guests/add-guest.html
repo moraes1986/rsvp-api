@@ -1,0 +1,194 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Convidados {% endblock %} 
+
+<!-- Element injected in the BODY element -->
+{% block body_class %} sidebar-mini {% endblock body_class %} 
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}
+
+  <!-- Google Font: Source Sans Pro -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="/assets/plugins/fontawesome-free/css/all.min.css">
+  <!-- Ionicons -->
+  <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+  <!-- Tempusdominus Bootstrap 4 -->
+  <link rel="stylesheet" href="/assets/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css">
+  <!-- iCheck -->
+  <link rel="stylesheet" href="/assets/plugins/icheck-bootstrap/icheck-bootstrap.min.css">
+  <!-- JQVMap -->
+  <link rel="stylesheet" href="/assets/plugins/jqvmap/jqvmap.min.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="/assets/css/adminlte.min.css">
+  <!-- overlayScrollbars -->
+  <link rel="stylesheet" href="/assets/plugins/overlayScrollbars/css/OverlayScrollbars.min.css">
+  <!-- Daterange picker -->
+  <link rel="stylesheet" href="/assets/plugins/daterangepicker/daterangepicker.css">
+  <!-- summernote -->
+  <link rel="stylesheet" href="/assets/plugins/summernote/summernote-bs4.min.css">
+
+{% endblock stylesheets %}
+{% block content %}
+  
+<div class="content-wrapper">
+
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1 class="m-0 text-dark">Lista de Convidados</h1>
+          </div><!-- /.col -->
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item"><a href="#">Home</a></li>
+              <li class="breadcrumb-item active">Lista Convidados</li>
+            </ol>
+          </div><!-- /.col -->
+        </div><!-- /.row -->
+      </div><!-- /.container-fluid -->
+    </div>
+    <!-- /.content-header -->
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">Editar Convidado</h3>
+        </div>
+
+        <!-- /.card-header -->
+        <div class="card-body">
+            <div>
+                <div class="form" id="formGuest">
+                    <div class="card-body">
+                        <div class="form-group">                          
+                            <div class="input-group">
+                                  <label></label>
+                                  <input type="text" name="id" value="" hidden>
+                                <div class="col-md-6">
+                                  <label for="fullname">Nome</label>
+                                  <input type="text" class="form-control" name="fullname" value="" placeholder="Nome">
+                                </div>
+                                <div class="col-md-6">
+                                  <label for="email">Email</label>
+                                  <input type="email" class="form-control" name="email" value="" placeholder="Email">
+                                </div>
+                                <div class="col-md-6">
+                                  <label for="phone">Telefone</label>
+                                  <input type="text" class="form-control" name="phone" value="" placeholder="Telefone">
+                                </div>
+                                <div class="col-md-6">
+                                  <label for="code">Código</label>
+                                <input type="text" class="form-control" name="code" value="" placeholder="Código">
+                                </div>
+                                <div class="col-md-6">
+                                  <label for="confirmed">Confirmado</label>
+                                  <input type="checkbox" class="form-control" name="confirmed"  />
+                                </div>
+                                <div class="col-md-6">
+                                  <label for="confirmed_at">Data de Confirmação</label>
+                                  <input type="datetime-local" class="form-control" name="confirmed_at" value="" placeholder="Data de Confirmação">
+                                </div>
+                                <div class="col-md-6">
+                                  <label for="is_child">Criança</label>
+                                  <input type="checkbox" class="form-control" name="is_child" />
+                                </div>
+                                <div class="col-md-6">
+                                  <label for="is_main">Convidade Principal</label>
+                                  <input type="checkbox" class="form-control" name="is_main"  />
+                                </div>
+                                <div class="col-12 text-center bg-light">
+                                  <h3>Lista de Acompanhantes</h3>
+                                </div>
+                                <ul class="col-12" id="parentList" name="parentList">
+                                  
+                                  <div class="" id="parent_block">
+                                  <li class="col-6 list-group-item bg-light">
+                                    {% block var_parent %}
+                                     
+                                      <div>
+                                        <label for="fullname">Nome</label>
+                                        <align class="float-right">
+                                          <a href="#" class="btn btn-danger" name="removeGuest" id="removeGuest" onclick="removeGuest('{{ parent.fullname }}')">Remover</a>
+                                        </align>
+                                        <input type="text" class="form-control" name="fullname" value="" placeholder="Nome">
+                                      </div>
+                                      <div>
+                                        <label for="confirmed">Confirmado</label>
+                                        <input type="checkbox" class="form-control" name="confirmed"  />
+                                      </div>
+                                      <div>
+                                        <label for="confirmed_at">Data de Confirmação</label>
+                                        <input type="datetime-local" class="form-control" name="confirmed_at" value="" placeholder="Data de Confirmação">
+                                      </div>
+                                      <div>
+                                        <label for="is_child">Criança</label>
+                                        <input type="checkbox" class="form-control" name="is_child"  />
+                                      </div>  
+                                      <div>
+                                        <label for="child_age">Idade</label>
+                                        <input type="number" class="form-control" name="child_age" value="" placeholder="Idade">
+                                      </div>
+                                    {% endblock var_parent %}
+                                  </li>
+                                </div>
+                                <br>
+                                  
+                                </ul>
+                            </div>
+                        </div>    
+                        <div class="text-center">
+                            <a href="/list_guests" class="btn btn-secondary">Cancelar</a>
+                            <a href="#" class="btn btn-success" id="addGuest">Associado</a>
+                            <button type="submit" class="btn btn-primary" onclick="confirmGuest()">Salvar</button>
+                        </div>                
+                    </div>
+                  <!-- /.card-body -->
+                </div>
+                <div class="col-md-9">
+                  {% with messages = get_flashed_messages() %}
+                    {% if messages %}
+                      {% for message in messages %}
+                          <div class="alert alert-danger" role="alert">
+                            {{ message }}
+                          </div>
+                      {% endfor %}
+                    {% endif %}
+                  {% endwith %}
+                </div>
+            </div>
+        </div>
+        <!-- /.card-body -->
+      </div>
+    </section>
+
+</div>
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}
+
+  <!-- jQuery -->
+  <script src="/assets/plugins/jquery/jquery.min.js"></script>
+  <!-- Bootstrap 4 -->
+  <script src="/assets/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <!-- DataTables -->
+  <script src="/assets/plugins/datatables/jquery.dataTables.min.js"></script>
+  <script src="/assets/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+  <script src="/assets/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+  <script src="/assets/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+  <!-- AdminLTE App -->
+  <script src="/assets/js/adminlte.min.js"></script>
+  <!-- bs-custom-file-input -->
+  <script src="/assets/plugins/bs-custom-file-input/bs-custom-file-input.min.js"></script>
+  <!-- AdminLTE for demo purposes -->
+  <script src="/assets/js/demo.js"></script>
+  <!-- Page specific script -->
+  <script src="/js/scriptGuest/guestedit.js"></script>
+
+{% endblock javascripts %}
+
