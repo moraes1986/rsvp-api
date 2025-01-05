@@ -49,13 +49,13 @@ def upload():
             confirmed_at = None
             parent_list = []
 
-            if row.get("is_child").lower == "sim":
+            if row.get("is_child").lower() == "sim":
                 is_child = True
             
-            if row.get("main_guest").lower == "sim":
+            if row.get("main_guest").lower() == "sim":
                 main_guest = True
 
-            if row.get("confirmed").lower == "sim":
+            if row.get("confirmed").lower() == "sim":
                 confirmed = True
                 confirmed_at = datetime.strptime(row.get("confirmed_at"), "%Y-%m-%d %H:%M:%S")
 
@@ -69,11 +69,12 @@ def upload():
                     parent_confirmed_at = ''
                     parent_is_child = False
                     parent_child_age = 0
-                    if row.get(f"parent_list{i}.is_child").lower == "sim":
+                    print('age: '+ row.get(f"parent_list{i}.is_child").lower())
+                    if row.get(f"parent_list{i}.is_child").lower() == "sim":
                         parent_is_child = True
                         parent_child_age = row.get(f"parent_list{i}.child_age")
                     
-                    if row.get(f"parent_list{i}.confirmed").lower == "sim":
+                    if row.get(f"parent_list{i}.confirmed").lower() == "sim":
                         parent_confirmed = True
                         parent_confirmed_at = datetime.strptime(row.get(f"parent_list{i}.confirmed_at"), "%Y-%m-%d %H:%M:%S")
                     
