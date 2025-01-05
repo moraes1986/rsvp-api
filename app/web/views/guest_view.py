@@ -64,7 +64,7 @@ def upload():
             for i in range(1, 10, 1):
                 print("fullname ----", row.get(f"parent_list{i}.fullname") )
                 print(i)
-                if row.get(f"parent_list{i}.fullname"):
+                if row.get(f"parent_list{i}.fullname") != '' and row.get(f"parent_list{i}.fullname") != None:
                     parent_confirmed = False
                     parent_confirmed_at = ''
                     parent_is_child = False
