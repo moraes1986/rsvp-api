@@ -39,12 +39,12 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0 text-dark">Lista de Convidados</h1>
+            <h1 class="m-0 text-dark">Lista de Convidados Confirmados</h1>
           </div><!-- /.col -->
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item"><a href="#">Home</a></li>
-              <li class="breadcrumb-item active">Lista Convidados</li>
+              <li class="breadcrumb-item active">Lista Convidados Confirmados</li>
             </ol>
           </div><!-- /.col -->
         </div><!-- /.row -->
@@ -56,42 +56,14 @@
     <section class="content">
       <div class="card">
         <div class="card-header">
-          <h3 class="card-title">Lista de Convidados</h3>
+          <h3 class="card-title">Lista de Convidados Confirmados</h3>
         </div>
-        <div>
-          <form action="/upload_guest" method="POST" enctype="multipart/form-data">
-            <div class="card-body col-md-4">
-              <div class="form-group">
-                <label for="exampleInputFile">Importar Convidados</label>
-                <div class="input-group">
-                  <div class="custom-file">
-                    <input type="file" class="custom-file-input" id="exampleInputFile" name="file">
-                    <label class="custom-file-label" for="exampleInputFile">Selecione arquivo</label>
-                  </div>
-                  <div class="col-md-2">
-                    <button type="submit" class="btn btn-primary">Enviar</button>
-                  </div>
-                  
-                </div>
-              </div>
-              <div>
-                <a href="https://docs.google.com/spreadsheets/d/1d61tlot_HrctM7o35qWA0nqwC6GWcXPLrciWLStB8hg/edit?gid=0#gid=0" class="btn btn-warning" target="_blank">Modelo de Arquivo para Upload</a>
-                <a href="/add_guest" class="btn btn-success">Novo</a>
-              </div>
-            </div>
-            <!-- /.card-body -->
-          </form>
-          
-          <div class="col-md-9">
-            {% with messages = get_flashed_messages() %}
-              {% if messages %}
-                {% for message in messages %}
-                    <div class="alert alert-danger" role="alert">
-                      {{ message }}
-                    </div>
-                {% endfor %}
-              {% endif %}
-            {% endwith %}
+        <div class="col-md-12">
+          <div>
+            <h5>Total de Convidados Confirmados: {{ confirmed_result['total_confirmed'] }}</h5> <br> 
+            <h5>Total de Crianças < 12 anos: {{ confirmed_result['total_child'] }}</h5> <br>
+            <h5>Total de Adultos: {{ confirmed_result['total_adult'] }}</h5> <br>
+
           </div>
         </div>
         <!-- /.card-header -->
@@ -104,13 +76,9 @@
               <th>Nome</th>
               <th>Telefone</th>
               <th>Principal</th>
-              <th>Email</th>
               <th>Confirmado</th>
-              <th>Criança</th>
-              <th>Idade</th>
               <th>Confirmação</th>
               <th>Associados</th>
-              <th>Ações</th>
             </tr>
             </thead>
             <tbody>
@@ -126,21 +94,12 @@
                       <input type="checkbox" disabled>
                     {% endif %}
                 </td>
-                <td>{{ guest['email'] }} </td>
                 <td>{%  if guest['confirmed'] == True %}
                         <input type="checkbox" checked disabled>
                      {% else %}   
                         <input type="checkbox" disabled>
                     {% endif %}
                 </td>
-                <td>
-                  {%  if guest['is_child'] == True %}
-                      <input type="checkbox" checked disabled>
-                    {% else %}   
-                      <input type="checkbox" disabled>
-                  {% endif %}
-                </td>
-                <td>{{ guest['child_age'] }}</td>
                 <td>
                   {{  guest['confirmed_at'] }} </td>
                 <td>
@@ -165,10 +124,6 @@
                   {% endfor %}
 
                 </td>
-                <td>
-                  <a href="/edit_guest/{{ guest['_id']['$oid'] }}" class="btn btn-primary">Editar</a>
-                  <a href="/delete_guest/{{ guest['_id']['$oid'] }}" class="btn btn-danger">Excluir</a>
-                </td>
               </tr>
               </div>
             {% endfor %}
@@ -181,13 +136,9 @@
                 <th>Nome</th>
                 <th>Telefone</th>
                 <th>Principal</th>
-                <th>Email</th>
                 <th>Confirmado</th>
-                <th>Criança</th>
-                <th>Idade</th>
                 <th>Confirmação</th>
                 <th>Associados</th>
-                <th>Ações</th>
               </tr>
             </tfoot>
           </table>

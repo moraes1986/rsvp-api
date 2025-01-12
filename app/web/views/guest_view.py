@@ -32,6 +32,54 @@ def list():
     
     return render_template("account/login.html")
 
+@guest.route('/list_confirmed')
+def list_confirmed():
+    
+    
+    if "token" in session:
+        req = requests.get(URL + "/list", headers={"Authorization": f"Bearer {session['token']}"})
+
+        if req.status_code == 401:
+            flash("You need to login")
+            return render_template("account/login.html")
+        
+        print(req.json())
+
+        list_confirmed = []
+        total_confirmed = 0
+        total_child = 0
+        total_adult = 0
+
+        for guest in req.json():
+            guest_parent = []
+            if guest.get("confirmed"):
+                for parent in guest.get("parentList"):
+                    if parent.get("confirmed"):
+                        guest_parent.append(parent)
+                        if parent.get("is_child") and parent.get("child_age") <= 12:
+                            total_child += 1
+                        else:
+                            total_adult += 1
+                    
+
+                if len(guest_parent) > 0:
+                    guest["parentList"] = guest_parent
+
+                list_confirmed.append(guest)
+                total_adult += 1     
+
+        total_confirmed = total_adult + total_child
+
+        confirmed_result = {
+            "total_confirmed": total_confirmed,
+            "total_adult": total_adult,
+            "total_child": total_child
+        }
+
+        return render_template("guests/list-confirmed.html", guests=list_confirmed, confirmed_result=confirmed_result)
+    
+    return render_template("account/login.html")
+
 @guest.route('/upload_guest', methods=["POST"])
 def upload():
     file = request.files.get("file")
