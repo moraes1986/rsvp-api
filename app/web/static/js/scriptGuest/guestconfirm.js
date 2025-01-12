@@ -1,5 +1,22 @@
 // Confirm guest
 
+/**** EVENT DATE ******/
+/* ENV FOR EVENT DATE */
+
+var event_date = '2025-01-15'
+
+/*** Check Event Date ***/
+function checkEventDate() {
+    let today = new Date()
+    let event = new Date(event_date)
+    if (today > event) {
+        console.log('Evento já ocorreu')
+        return false
+    }
+    console.log('Evento ainda não ocorreu')
+    return true
+}
+
 // phone mask
 const handlePhone = (event) => {
     let input = event.target
@@ -198,15 +215,23 @@ document.addEventListener('DOMContentLoaded', function() {
  
     if (confirmButton) {
         confirmButton.addEventListener('click', function() {
+
+            var response = '';
             var form = document.getElementById('bookingForm');
-            console.log("result: " + form.getElementsByTagName('input').namedItem('id').value);
             var guestId = form.getElementsByTagName('input').namedItem('id');
             var url = 'api/v1/guest/id?id=' + guestId.value;
-            var ret = getGuestId(url);
-            
             var result = document.getElementById('error');
-            var response = JSON.parse(ret);
-            
+            if (!checkEventDate()) {
+                response = {message: 'Prazo de confirmação encerrado!'}
+            }else{          
+                
+                console.log("result: " + form.getElementsByTagName('input').namedItem('id').value);
+                
+                
+                var ret = getGuestId(url);
+                
+                response = JSON.parse(ret);
+            }
             console.log('Message: ' +  response);
             
             if (!response.message) {
@@ -224,9 +249,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
             } else {
                 console.log('exibir erro');
-                result.innerHTML = 'Hóspede não encontrado';
-                document.getElementById('error').removeAttribute('hidden')
-                
+                result.innerHTML = response.message;
+                document.getElementById('error').removeAttribute('hidden')                
 
             }
             document.getElementById('fullname').focus();
