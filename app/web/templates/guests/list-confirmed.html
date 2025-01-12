@@ -66,17 +66,18 @@
 
           </div>
         </div>
+        <div>
+          <button type="button" class="btn btn-primary" onclick="printData()" >Imprimir</button>
+        </div>
         <!-- /.card-header -->
         <div class="card-body">
-          <table id="example1" class="table table-bordered table-striped">
+          <table id="example1" class="table table-bordered table-striped" border="1"">
             <thead>
             <tr>
               <th hidden>Id</th>
               <th>Código</th>
               <th>Nome</th>
               <th>Telefone</th>
-              <th>Principal</th>
-              <th>Confirmado</th>
               <th>Confirmação</th>
               <th>Associados</th>
             </tr>
@@ -88,18 +89,6 @@
                 <td>{{ guest['code'] }}</td>
                 <td>{{ guest['fullname'] }}</td>
                 <td>{{ guest['phone'] }} </td>
-                <td>{% if guest['main_guest'] == true %} 
-                      <input type="checkbox" checked disabled>
-                    {% else %}   
-                      <input type="checkbox" disabled>
-                    {% endif %}
-                </td>
-                <td>{%  if guest['confirmed'] == True %}
-                        <input type="checkbox" checked disabled>
-                     {% else %}   
-                        <input type="checkbox" disabled>
-                    {% endif %}
-                </td>
                 <td>
                   {{  guest['confirmed_at'] }} </td>
                 <td>
@@ -135,8 +124,6 @@
                 <th>Código</th>
                 <th>Nome</th>
                 <th>Telefone</th>
-                <th>Principal</th>
-                <th>Confirmado</th>
                 <th>Confirmação</th>
                 <th>Associados</th>
               </tr>
@@ -169,6 +156,8 @@
   <script src="/assets/plugins/bs-custom-file-input/bs-custom-file-input.min.js"></script>
   <!-- AdminLTE for demo purposes -->
   <script src="/assets/js/demo.js"></script>
+  <!-- Page specific script -->
+  <script src="/js/scriptGuest/printguest.js"></script>
   <!-- page script -->
   <script>
     $(function () {
