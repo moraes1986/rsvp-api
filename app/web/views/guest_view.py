@@ -49,6 +49,7 @@ def list_confirmed():
         total_confirmed = 0
         total_child = 0
         total_adult = 0
+        child_less_six = 0
 
         for guest in req.json():
             guest_parent = []
@@ -57,6 +58,8 @@ def list_confirmed():
                     if parent.get("confirmed"):
                         guest_parent.append(parent)
                         if parent.get("is_child") and parent.get("child_age") <= 12:
+                            if parent.get("child_age") <= 6:
+                                child_less_six += 1
                             total_child += 1
                         else:
                             total_adult += 1
@@ -73,7 +76,8 @@ def list_confirmed():
         confirmed_result = {
             "total_confirmed": total_confirmed,
             "total_adult": total_adult,
-            "total_child": total_child
+            "total_child": total_child,
+            "child_less_six": child_less_six
         }
 
         return render_template("guests/list-confirmed.html", guests=list_confirmed, confirmed_result=confirmed_result)

@@ -59,10 +59,12 @@
           <h3 class="card-title">Lista de Convidados Confirmados</h3>
         </div>
         <div class="col-md-12">
-          <div>
-            <h5>Total de Convidados Confirmados: {{ confirmed_result['total_confirmed'] }}</h5> <br> 
-            <h5>Total de Crianças < 12 anos: {{ confirmed_result['total_child'] }}</h5> <br>
-            <h5>Total de Adultos: {{ confirmed_result['total_adult'] }}</h5> <br>
+          <div class="card-body">
+            <h4 style="color: blue;">** Relatório Confirmação **</h4>
+            <h6>Total de Convidados Confirmados: <b style="color: rgb(13, 0, 255);">{{ confirmed_result['total_confirmed'] }}</b></h6>
+            <h6>Total de Crianças < 12 anos: <b style="color: rgb(13, 0, 255);">{{ confirmed_result['total_child'] }}</b></h6>
+            <h6>Total de Crianças <= 6 anos: <b style="color: rgb(13, 0, 255);">{{ confirmed_result['child_less_six'] }}</b></h6>
+            <h6>Total de Adultos: <b style="color: rgb(13, 0, 255);">{{ confirmed_result['total_adult'] }} </b></h6>
 
           </div>
         </div>
