@@ -81,10 +81,6 @@
                                   <input type="text" class="form-control" name="phone" value="" placeholder="Telefone">
                                 </div>
                                 <div class="col-md-6">
-                                  <label for="code">Código</label>
-                                <input type="text" class="form-control" name="code" value="" placeholder="Código">
-                                </div>
-                                <div class="col-md-6">
                                   <label for="confirmed">Confirmado</label>
                                   <input type="checkbox" class="form-control" name="confirmed"  />
                                 </div>
@@ -143,7 +139,7 @@
                         <div class="text-center">
                             <a href="/list_guests" class="btn btn-secondary">Cancelar</a>
                             <a href="#" class="btn btn-success" id="addGuest">Associado</a>
-                            <button type="submit" class="btn btn-primary" onclick="confirmGuest()">Salvar</button>
+                            <button type="submit" class="btn btn-primary" onclick="addGuest()">Salvar</button>
                         </div>                
                     </div>
                   <!-- /.card-body -->
@@ -189,6 +185,31 @@
   <script src="/assets/js/demo.js"></script>
   <!-- Page specific script -->
   <script src="/js/scriptGuest/guestedit.js"></script>
+
+  <script>
+    /* Adicionar Convidado */
+    function postAddGuest(payload) {
+    
+    console.log('payload: ' + payload);
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', '/api/v1/guest/add', true);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.setRequestHeader('Authorization', "Bearer {{ session['token'] }}");
+    xhr.send(payload);
+
+    
+    return new Promise((resolve, reject) => {
+        xhr.onload = function() {
+            if (xhr.status === 200 && xhr.readyState === 4) {
+                resolve(xhr);
+            } else {
+                reject(xhr);
+            }
+        }
+    }
+    );
+    }
+  </script>
 
 {% endblock javascripts %}
 

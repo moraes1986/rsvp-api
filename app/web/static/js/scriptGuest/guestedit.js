@@ -1,4 +1,4 @@
-/* Adicionando Novos Convidados Associados */
+/* Adicionando Novos Associados */
 
 $(document).ready(function() {
     console.log('teste');
@@ -95,6 +95,84 @@ async function confirmGuest() {
     
     let response;
     await postGuestConfirme(JSON.stringify(payload)).then(res => {
+        response = res;
+    }
+    );
+
+
+    if (response.status != 200) {
+        console.log('response2: ' + JSON.parse(response.responseText));
+        document.getElementById('error').innerHTML = JSON.parse(response.responseText).message;
+        document.getElementById('error').removeAttribute('hidden');
+    }else {
+        window.location.href = '/list_guests';
+        //document.getElementById('success').innerHTML = JSON.parse(response.responseText).message;
+        //document.getElementById('success').removeAttribute('hidden');
+        //document.getElementById('formGuest').setAttribute('hidden', true);
+    }
+
+}
+
+/* Adicionar Novos Convidados */
+async function addGuest() {
+    var form = document.getElementById('formGuest');
+    var sfullname = form.getElementsByTagName('input').namedItem('fullname').value;
+    var guestList = [];
+    console.log('confirm guest: '+ sfullname);
+
+    if(form.getElementsByTagName('li').length > 0) {
+        for (let i = 0; i < form.getElementsByTagName('li').length; i++) {
+            var guest;
+            console.log('form.getElementsByTagName: ' + form.getElementsByTagName('li').item(i).getElementsByTagName('input').namedItem('fullname').value);
+            if (form.getElementsByTagName('li').item(i).getElementsByTagName('input').namedItem('is_child') !== null) {
+                if (form.getElementsByTagName('li').item(i).getElementsByTagName('input').namedItem('is_child').checked === true) {
+                               
+                    guest = {
+                        fullname: form.getElementsByTagName('li').item(i).getElementsByTagName('input').namedItem('fullname').value,
+                        confirmed: form.getElementsByTagName('li').item(i).getElementsByTagName('input').namedItem('confirmed').checked,
+                        is_child: form.getElementsByTagName('li').item(i).getElementsByTagName('input').namedItem('is_child').checked,
+                        child_age: parseInt(form.getElementsByTagName('li').item(i).getElementsByTagName('input').namedItem('child_age').value),
+                        confirmed_at: (form.getElementsByTagName('li').item(i).getElementsByTagName('input').namedItem('confirmed').checked===true)?form.getElementsByTagName('li').item(i).getElementsByTagName('input').namedItem('confirmed_at').value:"",
+                        updated_at: new Date().toJSON(),
+                    }
+                }else {
+                    guest = {
+                        fullname: form.getElementsByTagName('li').item(i).getElementsByTagName('input').namedItem('fullname').value,
+                        confirmed: form.getElementsByTagName('li').item(i).getElementsByTagName('input').namedItem('confirmed').checked,
+                        is_child: form.getElementsByTagName('li').item(i).getElementsByTagName('input').namedItem('is_child').checked,
+                        confirmed_at: (form.getElementsByTagName('li').item(i).getElementsByTagName('input').namedItem('confirmed').checked===true)?form.getElementsByTagName('li').item(i).getElementsByTagName('input').namedItem('confirmed_at').value:"",
+                        updated_at: new Date().toJSON(),
+                    }
+                }
+            }else {
+                guest = {
+                    fullname: form.getElementsByTagName('li').item(i).getElementsByTagName('input').namedItem('fullname').value,
+                    confirmed: form.getElementsByTagName('li').item(i).getElementsByTagName('input').namedItem('confirmed').checked,
+                    is_child: false,
+                    confirmed_at: (form.getElementsByTagName('li').item(i).getElementsByTagName('input').namedItem('confirmed').checked===true)?form.getElementsByTagName('li').item(i).getElementsByTagName('input').namedItem('confirmed_at').value:"",
+                    updated_at: new Date().toJSON(),
+                }
+            }    
+
+            guestList.push(guest);
+        }
+    }
+
+    var payload = {
+        //_id: form.getElementsByTagName('input').namedItem('_id').value,
+        fullname: form.getElementsByTagName('input').namedItem('fullname').value,
+        email: form.getElementsByTagName('input').namedItem('email').value,
+        phone: parseInt(form.getElementsByTagName('input').namedItem('phone').value.replace(/[\s\W]/gm,'')),
+        confirmed: form.getElementsByTagName('input').namedItem('confirmed').checked,
+        is_child: false,
+        confirmed_at: (form.getElementsByTagName('input').namedItem('confirmed').checked===true)?form.getElementsByTagName('input').namedItem('confirmed_at').value:"",
+        updated_at: new Date().toJSON(),
+        parentList: guestList,
+    }
+
+    
+    let response;
+    await postAddGuest(JSON.stringify(payload)).then(res => {
         response = res;
     }
     );
