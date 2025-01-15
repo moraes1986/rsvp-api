@@ -3,7 +3,7 @@
 /**** EVENT DATE ******/
 /* ENV FOR EVENT DATE */
 
-var event_date = '2025-01-15'
+var event_date = '2025-01-16'
 
 /*** Check Event Date ***/
 function checkEventDate() {
